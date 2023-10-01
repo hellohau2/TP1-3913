@@ -5,7 +5,7 @@ import java.io.IOException;
 public class TLOC{
     public static void main(String[] args){
         if (args.length == 0) {
-            System.out.println("Provide an argument");
+            System.out.println("Indiquer le nom du fichier comme suit:\njava TLOC filename.java");
             System.exit(1);
         }
 
@@ -13,15 +13,17 @@ public class TLOC{
     }
 
     // Argument : String file = chemin du fichier pour TLOC 
-    // Output : int tloc = Le nombre de ligne qui ne sont pas vide et ne sont pas des commentaires
+    // Output : int tloc = Le nombre de lignes qui ne sont pas vide et ne sont pas des commentaires
     static int countTLOC(String file){
         int tloc = 0;
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             Boolean commentStart = false;
             String line;
             while ((line = br.readLine()) != null){
+                
                 // Enleve les espaces 
                 line = line.trim();
+
                 // Check si on commence un commentaire
                 if (line.startsWith("/*")){
                     commentStart = true;
@@ -38,9 +40,9 @@ public class TLOC{
                 }
             }
 
-
         }catch(IOException e){
-            e.printStackTrace();
+            System.out.println("Fichier introuvable");
+            System.exit(1);
         }
         return tloc;
     }
