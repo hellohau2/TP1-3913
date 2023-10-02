@@ -1,12 +1,12 @@
 import org.junit.Assert;
-public class tassert1 {
+public class tassert_testfile {
 
     public void testMethod() {
         Assert.fail("Blabla");
     }
 
     public static void main(String[] args) {
-        tassert1 test = new tassert1();
+        tassert_testfile test = new tassert_testfile();
         test.testMethod();
 
         // Ne fonctionne pas pour deux assertions sur une meme ligne
