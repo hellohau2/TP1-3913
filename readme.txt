@@ -1,5 +1,5 @@
 Membres de l'équipe : 
 
-Haounoui Louis 20189376
-Vyncent Larose 20189960
+Haunui Louis 20189376
+Vincent Larose 20189960
 
