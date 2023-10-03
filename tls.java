@@ -2,7 +2,11 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class tls {
 
@@ -30,6 +34,7 @@ public class tls {
             System.exit(1);
         }
 
+        // Fonctionne pour un path sur MacOS, \ verifier sur Windows
         File dossier = new File(folderPath);
         FilenameFilter filter = (dir, nomFichier) -> nomFichier.endsWith(".java");
         File[] fichiersJava = dossier.listFiles(filter);
@@ -39,8 +44,9 @@ public class tls {
                 // TODO
             }
             else {
-                String x = "chemin du fichier, nom du paquet, nom de la classe, tloc de la classe, tassert de la classe, tcmp de la classe\n";
+                String x = "chemin du fichier, nom du paquet, nom de la classe, tloc de la classe, tassert de la classe, tcmp de la classe";
                 for (File fichier : fichiersJava) {
+                    String paquet = getPackageName(fichier.getPath());
                     int t1 = TLOC.countTLOC(fichier.getName());
                     int t2 = tassert.countTAssert(fichier.getName());
                     int t3 = t2;
@@ -48,8 +54,9 @@ public class tls {
                     if (t2 == 0) {t3 = 1;}
                     float t4 = (float) t1/t3;
 
-                    // %s a changer pour %d (int) ou %.2f (float) une fois le tout fonctionnel
-                    String ligne = String.format("%s, %s, %s, %s, %s, %s\n", fichier.getPath(), "paquet", fichier.getName(), t1, t2, t4);
+                    // TODO: path relatif a la place
+
+                    String ligne = String.format("\n%s, %s, %s, %s, %s, %s", fichier.getPath(), getPackageName(fichier.getName()), fichier.getName(), t1, t2, t4);
                     x += ligne;
                 }
                 System.out.println(x);
@@ -58,5 +65,23 @@ public class tls {
         else {
             System.out.println("Ce dossier ne contient aucun fichier Java.");
         }
+    }
+    public static String getPackageName(String fileName) {
+        String packageName = "No package found";
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.matches("package .*;")) {
+                    packageName = line.substring(8, line.length() - 1);
+                    break;
+                }
+            }
+        }
+
+        catch(IOException e){
+            System.out.println("Fichier introuvable");
+            System.exit(1);
+        }
+        return packageName;
     }
 }
