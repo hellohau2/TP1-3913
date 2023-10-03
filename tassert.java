@@ -12,10 +12,11 @@ public class tassert {
             System.exit(1);
         }
 
-        countTAssert(args[0]);
+        System.out.println(countTAssert(args[0]) + " assertions JUnit");
     }
 
-    static void countTAssert(String fileName) {
+    // TODO: pour le moment, compte les "Assert...." en commentaires
+    static int countTAssert(String fileName) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
             String line;
@@ -36,7 +37,6 @@ public class tassert {
             System.out.println("Fichier introuvable");
             System.exit(1);
         }
-
-        System.out.println(count + " assertions JUnit");
+        return count;
     }
 }

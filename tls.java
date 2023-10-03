@@ -36,24 +36,27 @@ public class tls {
 
         if (fichiersJava != null) {
             if (createCsv == true) {
-                outputCsv();
+                // TODO
             }
             else {
-                outputTerminal();
+                String x = "chemin du fichier, nom du paquet, nom de la classe, tloc de la classe, tassert de la classe, tcmp de la classe\n";
+                for (File fichier : fichiersJava) {
+                    int t1 = TLOC.countTLOC(fichier.getName());
+                    int t2 = tassert.countTAssert(fichier.getName());
+                    int t3 = t2;
+                    // TODO: valeur de 1 correct?
+                    if (t2 == 0) {t3 = 1;}
+                    float t4 = (float) t1/t3;
+
+                    // %s a changer pour %d (int) ou %.2f (float) une fois le tout fonctionnel
+                    String ligne = String.format("%s, %s, %s, %s, %s, %s\n", fichier.getPath(), "paquet", fichier.getName(), t1, t2, t4);
+                    x += ligne;
+                }
+                System.out.println(x);
             }
         }
         else {
             System.out.println("Ce dossier ne contient aucun fichier Java.");
         }
-    }
-
-    public static void outputTerminal() {
-        String x = "chemin du fichier, nom du paquet, nom de la classe, tloc de la classe, tassert de la classe, tcmp de la classe\n";
-        // Do everything else
-        System.out.println(x);
-    }
-
-    public static void outputCsv() {
-
     }
 }
