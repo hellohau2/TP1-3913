@@ -19,24 +19,43 @@ public class tassert {
     static int countTAssert(String fileName) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
-            String line;
 
-            // Avec [] non consideres comme des caracteres du pattern, le pattern suivant represente:
-            // Assert.[anything]([anything])
-            Pattern pattern = Pattern.compile("Assert\\..*\\(.*\\)");
-            
-            while ((line = br.readLine()) != null) {
-                Matcher matcher = pattern.matcher(line);
-                while (matcher.find()) {
-                    count++;
+            Boolean commentStart = false;
+            String line;
+            while ((line = br.readLine()) != null){
+                
+                // Enleve les espaces 
+                line = line.trim();
+
+                // Check si on commence un commentaire
+                if (line.startsWith("/*")){
+                    commentStart = true;
                 }
+
+                // Check si c'est une ligne de code
+                if (!commentStart && !line.startsWith("//") && !line.isEmpty()){
+                    // Avec [] non consideres comme des caracteres du pattern, le pattern suivant represente:
+                    // Assert.[anything]([anything])
+                    Pattern pattern = Pattern.compile("\\bassert(?:\\w+)?\\s*\\(");
+                    
+                    Matcher matcher = pattern.matcher(line);
+                    while (matcher.find()) {
+                        count++;
+                    }
+                }
+
+                // Check si on n'est plus dans un commentaire
+                if (commentStart && line.endsWith("*/")){
+                    commentStart = false;
+                }
+
             }
         }
-
         catch(IOException e){
             System.out.println("Fichier introuvable");
             System.exit(1);
         }
+
         return count;
-    }
+        }
 }
