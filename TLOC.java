@@ -14,7 +14,7 @@ public class TLOC{
 
     // Argument : String file = chemin du fichier pour TLOC 
     // Output : int tloc = Le nombre de lignes qui ne sont pas vide et ne sont pas des commentaires
-    static int countTLOC(String file){
+    public static int countTLOC(String file){
         int tloc = 0;
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             Boolean commentStart = false;
