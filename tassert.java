@@ -16,7 +16,7 @@ public class tassert {
     }
 
     // TODO: pour le moment, compte les "Assert...." en commentaires
-    static int countTAssert(String fileName) {
+    public static int countTAssert(String fileName) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
 
