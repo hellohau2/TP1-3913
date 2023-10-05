@@ -23,9 +23,7 @@ public class tassert {
             Boolean commentStart = false;
             String line;
             while ((line = br.readLine()) != null){
-                
-                // Enleve les espaces 
-                line = line.trim();
+
 
                 // Check si on commence un commentaire
                 if (line.startsWith("/*")){
@@ -34,12 +32,12 @@ public class tassert {
 
                 // Check si c'est une ligne de code
                 if (!commentStart && !line.startsWith("//") && !line.isEmpty()){
-                    // Avec [] non consideres comme des caracteres du pattern, le pattern suivant represente:
-                    // Assert.[anything]([anything])
-                    Pattern pattern = Pattern.compile("\\bassert(?:\\w+)?\\s*\\(");
+                    Pattern pattern = Pattern.compile("Assert\\..*\\(.*\\)");
                     
                     Matcher matcher = pattern.matcher(line);
-                    while (matcher.find()) {
+                    if (matcher.find()) {
+                        // TODO: faire si plusieurs Assert sur une meme ligne
+                        // ou trouver un moyen de compter les nombre de fois qu'on utilise org.junit.Assert
                         count++;
                     }
                 }
