@@ -12,11 +12,11 @@ public class tassert {
             System.exit(1);
         }
 
-        System.out.println(countTAssert(args[0]) + " assertions JUnit");
+        System.out.println(countTassert(args[0]) + " assertions JUnit");
     }
 
     // TODO: pour le moment, compte les "Assert...." en commentaires
-    public static int countTAssert(String fileName) {
+    public static int countTassert(String fileName) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
 

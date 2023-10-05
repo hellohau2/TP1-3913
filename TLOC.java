@@ -2,20 +2,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class TLOC{
+public class tloc{
     public static void main(String[] args){
         if (args.length == 0) {
-            System.out.println("Indiquer le nom du fichier comme suit:\njava TLOC filename.java");
+            System.out.println("Indiquer le nom du fichier comme suit:\njava tloc filename.java");
             System.exit(1);
         }
-
-        System.out.println("TLOC : " + countTLOC(args[0]));
+        System.out.println("tloc: " + countTloc(args[0]));
     }
 
-    // Argument : String file = chemin du fichier pour TLOC 
-    // Output : int tloc = Le nombre de lignes qui ne sont pas vide et ne sont pas des commentaires
-    public static int countTLOC(String file){
-        int tloc = 0;
+    // Argument : String file = chemin du fichier pour tloc
+    // Output : int count = Le nombre de lignes qui ne sont pas vide et ne sont pas des commentaires
+    public static int countTloc(String file){
+        int count = 0;
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
             Boolean commentStart = false;
             String line;
@@ -31,7 +30,7 @@ public class TLOC{
 
                 // Check si c'est une ligne de code
                 if (!commentStart && !line.startsWith("//") && !line.isEmpty()){
-                    tloc++;
+                    count++;
                 }
 
                 // Check si on n'est plus dans un commentaire
@@ -44,6 +43,6 @@ public class TLOC{
             System.out.println("Fichier introuvable");
             System.exit(1);
         }
-        return tloc;
+        return count;
     }
 }

@@ -34,7 +34,7 @@ public class tropcomp {
         try (Stream<Path> stream = Files.walk(startDir)) {
             Result[] results = stream
                 .filter(file -> file.toString().endsWith("Test.java"))
-                .map(file -> new Result(file.toString(), TLOC.countTLOC(file.toString()), tassert.countTAssert(file.toString())))
+                .map(file -> new Result(file.toString(), tloc.countTloc(file.toString()), tassert.countTassert(file.toString())))
                 .toArray(Result[]::new);
             
             // Arrays utilises pour calculer les top n%

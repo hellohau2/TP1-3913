@@ -63,8 +63,8 @@ public class tls {
         if (fichiersJava.size() > 0) {
             String x = "Chemin, Paquet, Classe, tloc, tassert, tcmp";
             for (String fichier : fichiersJava) {
-                int t1 = TLOC.countTLOC(folderPathPrint+fichier);
-                int t2 = tassert.countTAssert(folderPathPrint+fichier);
+                int t1 = tloc.countTloc(folderPathPrint+fichier);
+                int t2 = tassert.countTassert(folderPathPrint+fichier);
                 int t3 = t2;
                 // TODO: valeur de 1 correct?
                 if (t2 == 0) {t3 = 1;}
