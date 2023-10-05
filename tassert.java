@@ -11,29 +11,27 @@ public class tassert {
             System.out.println("Indiquer le nom du fichier comme suit:\njava tassert filename.java");
             System.exit(1);
         }
-
-        System.out.println(countTAssert(args[0]) + " assertions JUnit");
+        if (!isJavaFile.isJavaFile(args[0])){
+            System.out.println("Veuillez choisir un fichier .java");
+            System.exit(1);
+        }
+        System.out.println(countTassert(args[0]) + " assertions JUnit");
     }
 
-    // TODO: pour le moment, compte les "Assert...." en commentaires
-    public static int countTAssert(String fileName) {
+    // TODO: pour le moment, compte les "Assert.[...]" en commentaires
+    public static int countTassert(String fileName) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
-
-            Boolean commentStart = false;
+            boolean commentStart = false;
             String line;
+            Pattern pattern = Pattern.compile("Assert\\..*\\(.*\\)");
             while ((line = br.readLine()) != null){
-
-
                 // Check si on commence un commentaire
                 if (line.startsWith("/*")){
                     commentStart = true;
                 }
-
                 // Check si c'est une ligne de code
                 if (!commentStart && !line.startsWith("//") && !line.isEmpty()){
-                    Pattern pattern = Pattern.compile("Assert\\..*\\(.*\\)");
-                    
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
                         // TODO: faire si plusieurs Assert sur une meme ligne
@@ -41,19 +39,16 @@ public class tassert {
                         count++;
                     }
                 }
-
                 // Check si on n'est plus dans un commentaire
                 if (commentStart && line.endsWith("*/")){
                     commentStart = false;
                 }
-
             }
         }
         catch(IOException e){
             System.out.println("Fichier introuvable");
             System.exit(1);
         }
-
         return count;
-        }
+    }
 }

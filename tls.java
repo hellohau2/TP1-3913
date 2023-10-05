@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.BufferedReader;
@@ -14,9 +13,9 @@ public class tls {
 
     public static void main(String[] args) {
         String folderPath = "";
-        String csvName = "";
         String folderPathPrint = "";
-        Boolean createCsv = false;
+        String csvName = "";
+        boolean createCsv = false;
         if (args.length == 0) {
             folderPath = "./";
             folderPathPrint = folderPath;
@@ -38,7 +37,7 @@ public class tls {
             // Sortie dans un fichier .csv
         }
         else {
-            System.out.println("Fichier inexistant");
+            System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>");
             System.exit(1);
         }
 
@@ -52,25 +51,22 @@ public class tls {
         //List of all files and directories
         String[] fichiers = dossier.list();
         List<String> fichiersJava = new ArrayList<>();
-        Pattern pattern = Pattern.compile(".*\\.java");
-        for(int i = 0; i < fichiers.length; i++) {
-            Matcher matcher = pattern.matcher(fichiers[i]);
-            if (matcher.find()) {
-                fichiersJava.add(fichiers[i]);
+        assert fichiers != null;
+        for (String s : fichiers) {
+            if (isJavaFile.isJavaFile(s)) {
+                fichiersJava.add(s);
             }
         }
 
         if (fichiersJava.size() > 0) {
             String x = "Chemin, Paquet, Classe, tloc, tassert, tcmp";
             for (String fichier : fichiersJava) {
-                int t1 = TLOC.countTLOC(folderPathPrint+fichier);
-                int t2 = tassert.countTAssert(folderPathPrint+fichier);
+                int t1 = tloc.countTloc(folderPathPrint+fichier);
+                int t2 = tassert.countTassert(folderPathPrint+fichier);
                 int t3 = t2;
                 // TODO: valeur de 1 correct?
                 if (t2 == 0) {t3 = 1;}
                 float t4 = (float) t1/t3;
-
-                // TODO: path relatif a la place
 
                 String ligne = String.format("\n%s, %s, %s, %s, %s, %s", folderPathPrint+fichier, getPackageName(folderPathPrint+fichier), fichier, t1, t2, t4);
                 x += ligne;
@@ -83,7 +79,6 @@ public class tls {
                     e.printStackTrace();
                 }
             }
-
             else {
                 System.out.println(x);
             }
