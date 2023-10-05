@@ -14,6 +14,7 @@ public class tls {
 
     public static void main(String[] args) {
         String folderPath = "";
+        String csvName = "";
         String folderPathPrint = "";
         Boolean createCsv = false;
         if (args.length == 0) {
@@ -24,13 +25,14 @@ public class tls {
         }
         else if (args.length == 1) {
             folderPath = args[0];
-            folderPathPrint = folderPath+"/";
+            if (folderPath.equals("./")) {folderPathPrint = folderPath;} else {folderPathPrint = folderPath+"/";}
             // tls path
             // Sortie en ligne de commande, pas de fichier .csv produit
         }
-        else if (args.length == 3 && args[0] == "-o") {
+        else if (args[0].equals("-o")) {
             folderPath = args[2];
-            folderPathPrint = folderPath+"/";
+            if (folderPath.equals("./")) {folderPathPrint = folderPath;} else {folderPathPrint = folderPath+"/";}
+            csvName = args[1];
             createCsv = true;
             // tls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>
             // Sortie dans un fichier .csv
@@ -59,36 +61,30 @@ public class tls {
         }
 
         if (fichiersJava.size() > 0) {
-            if (createCsv) {
-                // TODO
+            String x = "Chemin, Paquet, Classe, tloc, tassert, tcmp";
+            for (String fichier : fichiersJava) {
+                int t1 = TLOC.countTLOC(folderPathPrint+fichier);
+                int t2 = tassert.countTAssert(folderPathPrint+fichier);
+                int t3 = t2;
+                // TODO: valeur de 1 correct?
+                if (t2 == 0) {t3 = 1;}
+                float t4 = (float) t1/t3;
+
+                // TODO: path relatif a la place
+
+                String ligne = String.format("\n%s, %s, %s, %s, %s, %s", folderPathPrint+fichier, getPackageName(folderPathPrint+fichier), fichier, t1, t2, t4);
+                x += ligne;
             }
-            else {
-                String x = "chemin du fichier, nom du paquet, nom de la classe, tloc de la classe, tassert de la classe, tcmp de la classe";
-                for (String fichier : fichiersJava) {
-                    /*if (fichier.equals("tassert_testfile.java")){
-                        try (BufferedReader br = new BufferedReader(new FileReader(fichier))){
-                            String line = "";
-                            while((line = br.readLine()) != null){
-                                System.out.println(line);
-                            }
-                        }
-                        catch(IOException e){
-                            System.out.println("XXX");
-                            System.exit(1);
-                        }
-                    }*/
-                    int t1 = TLOC.countTLOC(folderPathPrint+fichier);
-                    int t2 = tassert.countTAssert(folderPathPrint+fichier);
-                    int t3 = t2;
-                    // TODO: valeur de 1 correct?
-                    if (t2 == 0) {t3 = 1;}
-                    float t4 = (float) t1/t3;
 
-                    // TODO: path relatif a la place
-
-                    String ligne = String.format("\n%s, %s, %s, %s, %s, %s", folderPathPrint+fichier, getPackageName(folderPathPrint+fichier), fichier, t1, t2, t4);
-                    x += ligne;
+            if (createCsv) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
+                    writer.write(x);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
+
+            else {
                 System.out.println(x);
             }
         }
