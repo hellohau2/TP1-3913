@@ -15,5 +15,6 @@ public class tassert_testfile {
         Assert.fail(); Assert.fail();
         Assert.assertFalse(true);
         Assert.fail();
+        fail();
     }
 }
