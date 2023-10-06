@@ -1,0 +1,14 @@
+Chemin, Paquet, Classe, TLOC, TASSERT, tcmp
+./jfreechart-master/src/test/java/org/jfree/chart/renderer/category/BoxAndWhiskerRendererTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/renderer/category/BoxAndWhiskerRendererTest, 307, 26, 11.81
+./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedRangeXYPlotTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedRangeXYPlotTest, 157, 9, 17.44
+./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedDomainXYPlotTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedDomainXYPlotTest, 163, 10, 16.30
+./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedRangeCategoryPlotTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedRangeCategoryPlotTest, 161, 8, 20.13
+./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedDomainCategoryPlotTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/plot/CombinedDomainCategoryPlotTest, 161, 9, 17.89
+./jfreechart-master/src/test/java/org/jfree/chart/GanttChartTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/GanttChartTest, 173, 4, 43.25
+./jfreechart-master/src/test/java/org/jfree/chart/swing/ChartPanelTest.java,  , ./jfreechart-master/src/test/java/org/jfree/chart/swing/ChartPanelTest, 216, 23, 9.39
+./jfreechart-master/src/test/java/org/jfree/data/statistics/StatisticsTest.java,  , ./jfreechart-master/src/test/java/org/jfree/data/statistics/StatisticsTest, 296, 46, 6.43
+./jfreechart-master/src/test/java/org/jfree/data/category/DefaultIntervalCategoryDatasetTest.java,  , ./jfreechart-master/src/test/java/org/jfree/data/category/DefaultIntervalCategoryDatasetTest, 304, 46, 6.61
+./jfreechart-master/src/test/java/org/jfree/data/time/QuarterTest.java,  , ./jfreechart-master/src/test/java/org/jfree/data/time/QuarterTest, 375, 58, 6.47
+./jfreechart-master/src/test/java/org/jfree/data/time/MonthTest.java,  , ./jfreechart-master/src/test/java/org/jfree/data/time/MonthTest, 374, 58, 6.45
+./jfreechart-master/src/test/java/org/jfree/data/time/YearTest.java,  , ./jfreechart-master/src/test/java/org/jfree/data/time/YearTest, 328, 47, 6.98
+./jfreechart-master/src/test/java/org/jfree/data/time/WeekTest.java,  , ./jfreechart-master/src/test/java/org/jfree/data/time/WeekTest, 460, 71, 6.48

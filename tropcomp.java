@@ -116,10 +116,18 @@ public class tropcomp {
         }
 
         // Extraction nom du fichier
-        String[] pathParts = path.split("\\\\");
-        String fileName = pathParts[pathParts.length - 1].replace(".java", "");
+        // Ne fonctionnait pas pour moi (Vyncent)
+        //String[] pathParts = path.split("\\\\");
+        //String fileName = pathParts[pathParts.length - 1].replace(".java", "");
+
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
 
         // Extraction package
+        /*
+
+        Ne fonctionnait pas pour moi (Vyncent)
+        Utilisation de ma fonction dans tls a la place
+
         String packageName = "";
         int sourceIndex = path.indexOf("\\src\\test\\java\\");
         if (sourceIndex == -1) {
@@ -128,12 +136,13 @@ public class tropcomp {
         else {
             packageName = path.substring(sourceIndex + 15, path.length() - fileName.length() - 5).replace("\\", ".");
         }
+        */
 
         // Calcul TCMP
         float TCMP = (float) TLOC / TASSERT;
 
         // Combine everything
-        return String.format("%s,  %s, %s, %d, %d, %.2f", path, packageName, fileName, TLOC, TASSERT, TCMP);
+        return String.format("%s, %s, %s, %d, %d, %.2f", path, tls.getPackageName(path.toString()), fileName.substring(0, fileName.length()-5), TLOC, TASSERT, TCMP);
     }
 
 }
