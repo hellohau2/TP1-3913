@@ -136,7 +136,7 @@ public class tropcomp {
         float TCMP = (float) TLOC / TASSERT;
 
         // Combine everything
-        return String.format("%s, %s, %s, %d, %d, %.2f", path, tls.getPackageName(path.toString()), fileName.substring(0, fileName.length()-5), TLOC, TASSERT, TCMP);
+        return String.format("%s, %s, %s, %d, %d, %.2f", path, packageName, fileName.substring(0, fileName.length()-5), TLOC, TASSERT, TCMP);
     }
 
 }
