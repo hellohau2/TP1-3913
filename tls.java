@@ -68,6 +68,7 @@ public class tls {
                 }
                 float t4 = (float) t1 / t3;
 
+                // TODO: Faut-il vérifier si le path suit les normes Maven pour ensuite ne pas imprimer le path au complet?
                 String ligne = String.format("\n%s, %s, %s, %s, %s, %s", folderPathPrint + fichier, getPackageName(folderPathPrint + fichier), fichier, t1, t2, t4);
                 x += ligne;
             }
