@@ -17,12 +17,16 @@ public class tls {
     public static void main(String[] args) {
         if (args.length == 0) {
             computeTls("./", false, null, -1.0f);
+        } else if (args[0].equals("-o")) {
+            if (args.length != 3 || !args[1].endsWith(".csv")) {
+                System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>\nou\ntls <chemin-de-l'entrée>\nou\ntls");
+                System.exit(1);
+            }
+            computeTls(args[2], true, args[1], -1.0f);
         } else if (args.length == 1) {
             computeTls(args[0], false, null, -1.0f);
-        } else if (args[0].equals("-o")) {
-            computeTls(args[2], true, args[1], -1.0f);
         } else {
-            System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>");
+            System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>\nou\ntls <chemin-de-l'entrée>\nou\ntls");
             System.exit(1);
         }
     }
@@ -64,39 +68,57 @@ public class tls {
                 // Get the value at the calculated index
                 float thresholdTLOCS = TLOCSfromCleaned[indexTLOCS];
                 float thresholdTCMPS = TCMPfromCleaned[indexTCMPS];
-                
-                for(int i = 0; i < results.length; i++) {
-                    if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                        System.out.println(cleanedStrings[i]);
+
+                if(toCsv){
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
+
+                        // Premier ligne
+                        writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
+
+                        // Use the results array as needed
+                        for(int i = 0; i < results.length; i++) {
+                            if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS) {
+                                assert cleanedStrings[i] != null;
+                                writer.newLine();
+                                writer.write(cleanedStrings[i]);
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    for(int i = 0; i < results.length; i++) {
+                        if (results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
+                            System.out.println(cleanedStrings[i]);
+                        }
                     }
                 }
             } else {
-                for(int i = 0; i < results.length; i++) {
-                    System.out.println(cleanedStrings[i]);
-                }
-            }
+                if(toCsv){
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
 
-            if(toCsv){
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
+                        // Premier ligne
+                        writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
 
-                    // Premier ligne
-                    writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
-                    writer.newLine();
+                        // Use the results array as needed
+                        for(int i = 0; i < results.length; i++) {
+                            assert cleanedStrings[i] != null;
+                            writer.newLine();
+                            writer.write(cleanedStrings[i]);
+                        }
 
-                    // Use the results array as needed
-                    for(int i = 0; i < results.length; i++) {
-                        assert cleanedStrings[i] != null;
-                        writer.write(cleanedStrings[i]);
-                        writer.newLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    for(int i = 0; i < results.length; i++) {
+                        System.out.println(cleanedStrings[i]);
+                    }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Chemin invalide");
         }
     }
 
@@ -115,7 +137,7 @@ public class tls {
         String fileName = pathParts[pathParts.length - 1].replace(".java", "");
 
         // Extraction package
-        String packageName = "";
+        String packageName = "No package found";
         int sourceIndex = path.indexOf("\\src\\test\\java\\");
         if (sourceIndex == -1) {
             sourceIndex = path.indexOf("\\src\\main\\java\\");

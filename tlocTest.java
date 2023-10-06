@@ -3,7 +3,7 @@
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class TLOC_testfile {
+public class tlocTest {
     public static void main(String[] args) { // Main method
         /*Long comment that spans multiple lines
          * 1
@@ -12,6 +12,8 @@ public class TLOC_testfile {
          * 4
          */
         System.out.println("testing TLOC");
+        assertHHH(aadsfs);
+        fail();
         /* Another comment */
     }
     
