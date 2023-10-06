@@ -33,7 +33,7 @@ public class tropcomp {
         
         try (Stream<Path> stream = Files.walk(startDir)) {
             Result[] results = stream
-                .filter(file -> file.toString().endsWith(".java"))
+                .filter(file -> file.toString().endsWith("Test.java"))
                 .map(file -> new Result(file.toString(), tloc.countTloc(file.toString()), tassert.countTassert(file.toString())))
                 .toArray(Result[]::new);
             
@@ -69,13 +69,6 @@ public class tropcomp {
             // System.out.println(indexTCMPS);
             // System.out.println(threshold);
 
-            for(int i = 0; i < results.length; i++) {
-                // Si on est dans les top n% pour TLOC et TCMP
-                if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                    System.out.println(cleanedStrings[i]);
-                }
-            }
-
             if(toCsv){
                 // Use try-with-resources statement to automatically close the resources
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
@@ -95,6 +88,13 @@ public class tropcomp {
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            } else {
+                for(int i = 0; i < results.length; i++) {
+                    // Si on est dans les top n% pour TLOC et TCMP
+                    if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
+                        System.out.println(cleanedStrings[i]);
+                    }
                 }
             }
             
