@@ -46,7 +46,8 @@ public class tls {
                 cleanedStrings[i] = cleanString(results[i].filePath, results[i].tlocResult, results[i].tassertResult);
 
                 TLOCSfromCleaned[i] = results[i].tlocResult;
-                TCMPfromCleaned[i] = (float) results[i].tlocResult / results[i].tassertResult;
+                if(results[i].tassertResult != 0) TCMPfromCleaned[i] = (float) results[i].tlocResult / results[i].tassertResult;
+                else TCMPfromCleaned[i] = 0f;
             }
 
             // Threshold de -1.0 signifie qu'on n'utilise pas le threshold
@@ -65,34 +66,54 @@ public class tls {
                 float thresholdTLOCS = TLOCSfromCleaned[indexTLOCS];
                 float thresholdTCMPS = TCMPfromCleaned[indexTCMPS];
                 
-                for(int i = 0; i < results.length; i++) {
-                    if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                        System.out.println(cleanedStrings[i]);
+                if(toCsv){
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {                        
+                        // Premier ligne
+                        writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
+                        writer.newLine();
+
+                        // Use the results array as needed
+                        for(int i = 0; i < results.length; i++) {
+                            if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
+                                writer.write(cleanedStrings[i]);
+                                writer.newLine();
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+                else{
+                    for(int i = 0; i < results.length; i++) {
+                        if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
+                            System.out.println(cleanedStrings[i]);
+                        }
+                    }
+                }
+
             } else {
                 for(int i = 0; i < results.length; i++) {
                     System.out.println(cleanedStrings[i]);
                 }
-            }
 
-            if(toCsv){
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
-
-                    // Premier ligne
-                    writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
-                    writer.newLine();
-
-                    // Use the results array as needed
-                    for(int i = 0; i < results.length; i++) {
-                        assert cleanedStrings[i] != null;
-                        writer.write(cleanedStrings[i]);
+                if(toCsv){
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
+                    
+                        
+                        // Premier ligne
+                        writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
                         writer.newLine();
+
+                        // Use the results array as needed
+                        for(int i = 0; i < results.length; i++) {
+                            if(cleanedStrings[i] != null){
+                                writer.write(cleanedStrings[i]);
+                                writer.newLine();
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {

@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 public class tropcomp {
     public static void main(String[] args) {
-        if (args.length == 0) {
-            System.out.println("Usage : -o yourfilename.csv filepath threshold \n or \n Usage : filepath threshold");
+        if (args.length == 0 || (args.length != 2 && args.length != 4)) {
+            System.out.println("Usage : -o yourfilename.csv filepath threshold \nor\nUsage : filepath threshold");
             System.exit(1);
         }
         if (args[0].equals("-o")){
