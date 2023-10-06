@@ -147,6 +147,7 @@ public class tls {
 
         // Calcul TCMP
         float TCMP = (float) TLOC / TASSERT;
+        System.out.println("test");
 
         // Combine everything
         return String.format("%s, %s, %s, %d, %d, %.2f", path, packageName, fileName, TLOC, TASSERT, TCMP);

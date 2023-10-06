@@ -28,6 +28,19 @@ public class tloc{
                 
                 // Enleve les espaces 
                 line = line.trim();
+                
+                // Check pour les cas : /* commentaires */ code sur la meme ligne
+                if(line.contains("/*") && line.contains("*/")){
+                    String[] parts = line.split("/\\*.*\\*/");
+                    for(String part : parts){
+                        if(!part.trim().isEmpty() && !part.trim().startsWith("//")){
+                            count++;
+                            break;
+                        }
+                    }
+                    
+                    continue;
+                }
 
                 // Check si on commence un commentaire
                 if (line.startsWith("/*")){
