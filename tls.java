@@ -22,7 +22,7 @@ public class tls {
         } else if (args[0].equals("-o")) {
             computeTls(args[2], true, args[1], -1.0f);
         } else {
-            System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>");
+            System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>\nou\ntls <chemin-de-l'entrée>\nou\ntls");
             System.exit(1);
         }
     }
