@@ -33,7 +33,7 @@ public class tropcomp {
         
         try (Stream<Path> stream = Files.walk(startDir)) {
             Result[] results = stream
-                .filter(file -> file.toString().endsWith("Test.java"))
+                .filter(file -> file.toString().endsWith(".java"))
                 .map(file -> new Result(file.toString(), tloc.countTloc(file.toString()), tassert.countTassert(file.toString())))
                 .toArray(Result[]::new);
             
