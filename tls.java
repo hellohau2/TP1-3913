@@ -92,10 +92,6 @@ public class tls {
                 }
 
             } else {
-                for(int i = 0; i < results.length; i++) {
-                    System.out.println(cleanedStrings[i]);
-                }
-
                 if(toCsv){
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
                     
@@ -114,6 +110,11 @@ public class tls {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }else{
+                    for(int i = 0; i < results.length; i++) {
+                        System.out.println(cleanedStrings[i]);
+                }
+
                 }
             }
         } catch (IOException e) {
@@ -147,7 +148,6 @@ public class tls {
 
         // Calcul TCMP
         float TCMP = (float) TLOC / TASSERT;
-        System.out.println("test");
 
         // Combine everything
         return String.format("%s, %s, %s, %d, %d, %.2f", path, packageName, fileName, TLOC, TASSERT, TCMP);
