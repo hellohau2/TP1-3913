@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class tls {
 
@@ -21,32 +19,32 @@ public class tls {
             folderPathPrint = folderPath;
             // tls
             // Faire tls a l'interieur du dossier actuel
-        }
-        else if (args.length == 1) {
+        } else if (args.length == 1) {
             folderPath = args[0];
-            if (folderPath.equals("./")) {folderPathPrint = folderPath;} else {folderPathPrint = folderPath+"/";}
+            if (folderPath.equals("./") || folderPath.endsWith("/")) {
+                folderPathPrint = folderPath;
+            } else {
+                folderPathPrint = folderPath + "/";
+            }
             // tls path
             // Sortie en ligne de commande, pas de fichier .csv produit
-        }
-        else if (args[0].equals("-o")) {
+        } else if (args[0].equals("-o")) {
             folderPath = args[2];
-            if (folderPath.equals("./")) {folderPathPrint = folderPath;} else {folderPathPrint = folderPath+"/";}
+            if (folderPath.equals("./") || folderPath.endsWith("/")) {
+                folderPathPrint = folderPath;
+            } else {
+                folderPathPrint = folderPath + "/";
+            }
             csvName = args[1];
             createCsv = true;
             // tls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>
             // Sortie dans un fichier .csv
-        }
-        else {
+        } else {
             System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>");
             System.exit(1);
         }
 
-        // Fonctionne pour un path sur MacOS, \ verifier sur Windows
-        /*File dossier = new File(folderPath);
-        System.setProperty( "user.dir", folderPath );
-        FilenameFilter filter = (dir, nomFichier) -> nomFichier.endsWith(".java");
-        File[] fichiersJava = dossier.listFiles(filter);*/
-
+        // TODO: try catch pour mauvais path?
         File dossier = new File(folderPath);
         //List of all files and directories
         String[] fichiers = dossier.list();
@@ -61,14 +59,16 @@ public class tls {
         if (fichiersJava.size() > 0) {
             String x = "Chemin, Paquet, Classe, tloc, tassert, tcmp";
             for (String fichier : fichiersJava) {
-                int t1 = tloc.countTloc(folderPathPrint+fichier);
-                int t2 = tassert.countTassert(folderPathPrint+fichier);
+                int t1 = tloc.countTloc(folderPathPrint + fichier);
+                int t2 = tassert.countTassert(folderPathPrint + fichier);
                 int t3 = t2;
                 // TODO: valeur de 1 correct?
-                if (t2 == 0) {t3 = 1;}
-                float t4 = (float) t1/t3;
+                if (t2 == 0) {
+                    t3 = 1;
+                }
+                float t4 = (float) t1 / t3;
 
-                String ligne = String.format("\n%s, %s, %s, %s, %s, %s", folderPathPrint+fichier, getPackageName(folderPathPrint+fichier), fichier, t1, t2, t4);
+                String ligne = String.format("\n%s, %s, %s, %s, %s, %s", folderPathPrint + fichier, getPackageName(folderPathPrint + fichier), fichier, t1, t2, t4);
                 x += ligne;
             }
 
@@ -78,16 +78,15 @@ public class tls {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
+            } else {
                 System.out.println(x);
             }
-        }
-        else {
+        } else {
             // TODO: faire deux cas séparés
             System.out.println("Ce dossier n'existe pas ou ne contient aucun fichier Java.");
         }
     }
+
     public static String getPackageName(String fileName) {
         String packageName = "No package found";
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){

@@ -24,8 +24,10 @@ public class tassert {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
             boolean commentStart = false;
             String line;
-            Pattern pattern = Pattern.compile("Assert\\..*\\(.*\\)");
+            Pattern pattern = Pattern.compile("(?: |^)assert[a-zA-Z]*\\(.*\\)|fail\\(.*\\)");
+
             while ((line = br.readLine()) != null){
+                line = line.trim();
                 // Check si on commence un commentaire
                 if (line.startsWith("/*")){
                     commentStart = true;
@@ -35,8 +37,9 @@ public class tassert {
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
                         // TODO: faire si plusieurs Assert sur une meme ligne
-                        // ou trouver un moyen de compter les nombre de fois qu'on utilise org.junit.Assert
+                        // TODO: faire si pattern trouvé dans un commentaire à la fin d'une ligne
                         count++;
+                        // System.out.println(line);
                     }
                 }
                 // Check si on n'est plus dans un commentaire

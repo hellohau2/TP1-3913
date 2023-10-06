@@ -12,7 +12,7 @@ public class tassert_testfile {
         test.testMethod();
 
         // Ne fonctionne pas pour deux assertions sur une meme ligne
-        Assert.fail(); Assert.fail();
+        Assert.fail();// Assert.fail();
         Assert.assertFalse(true);
         Assert.fail();
         fail();

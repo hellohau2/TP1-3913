@@ -1,7 +1,8 @@
 Chemin, Paquet, Classe, tloc, tassert, tcmp
 ./tropcomp.java, No package found, tropcomp.java, 97, 0, 97.0
-./tassert.java, No package found, tassert.java, 41, 0, 41.0
-./TLOC.java, No package found, TLOC.java, 35, 0, 35.0
-./tls.java, No package found, tls.java, 89, 0, 89.0
-./TLOC_testfile.java, No package found, TLOC_testfile.java, 9, 0, 9.0
-./tassert_testfile.java, notReal, tassert_testfile.java, 14, 4, 3.5
+./tassert.java, No package found, tassert.java, 46, 0, 46.0
+./tloc.java, No package found, tloc.java, 39, 0, 39.0
+./tls.java, No package found, tls.java, 90, 0, 90.0
+./tloc_testfile.java, No package found, tloc_testfile.java, 9, 0, 9.0
+./tassert_testfile.java, No package found, tassert_testfile.java, 14, 4, 3.5
+./isJavaFile.java, No package found, isJavaFile.java, 14, 0, 14.0
