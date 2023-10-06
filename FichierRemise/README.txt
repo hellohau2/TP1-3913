@@ -4,6 +4,7 @@ Haunui Louis 20189376
 Vyncent Larose 20189960
 
 Lien Github : https://github.com/hellohau2/TP1-3913
+À noter que les versions finales du code sont sur la branche "latest" dû à des problèmes de permissions github.
 
 Pour compiler le code : javac *.java
 Les fichiers jars n'ont pas besoin d'être compilé.
