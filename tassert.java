@@ -18,7 +18,6 @@ public class tassert {
         System.out.println(countTassert(args[0]) + " assertions JUnit");
     }
 
-    // TODO: pour le moment, compte les "Assert...." en commentaires
     public static int countTassert(String fileName) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
@@ -39,7 +38,6 @@ public class tassert {
                         // TODO: faire si plusieurs Assert sur une meme ligne
                         // TODO: faire si pattern trouvé dans un commentaire à la fin d'une ligne
                         count++;
-                        // System.out.println(line);
                     }
                 }
                 // Check si on n'est plus dans un commentaire
