@@ -17,7 +17,7 @@ public class tls2 {
         if (args.length == 0) {
             computeTls();
         } else if (args.length == 1) {
-            computeTls();
+            computeTls();s
         } else if (args[0].equals("-o")) {
             computeTls();
         } else {
