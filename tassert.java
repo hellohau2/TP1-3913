@@ -27,12 +27,32 @@ public class tassert {
 
             while ((line = br.readLine()) != null){
                 line = line.trim();
+
+                if(line.contains("/*") && line.contains("*/")){
+                    String[] parts = line.split("/\\*.*\\*/");
+                    for(String part : parts){
+                        if(!part.trim().isEmpty() && !part.trim().startsWith("//")){
+                            Matcher matcher = pattern.matcher(line);
+                            while (matcher.find()) {
+                                // TODO: faire si plusieurs Assert sur une meme ligne
+                                // TODO: faire si pattern trouvé dans un commentaire à la fin d'une ligne
+                                count++;
+                            }
+                            break;
+                        }
+                    }
+                    
+                    continue;
+                }
+
                 // Check si on commence un commentaire
                 if (line.startsWith("/*")){
                     commentStart = true;
                 }
+
                 // Check si c'est une ligne de code
                 if (!commentStart && !line.startsWith("//") && !line.isEmpty()){
+                    
                     Matcher matcher = pattern.matcher(line);
                     while (matcher.find()) {
                         // TODO: faire si plusieurs Assert sur une meme ligne
@@ -40,6 +60,7 @@ public class tassert {
                         count++;
                     }
                 }
+                
                 // Check si on n'est plus dans un commentaire
                 if (commentStart && line.endsWith("*/")){
                     commentStart = false;
