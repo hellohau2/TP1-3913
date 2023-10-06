@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 public class tropcomp {
     public static void main(String[] args) {
-
         if (args.length == 0) {
             System.out.println("Usage : -o yourfilename.csv filepath threshold \n or \n Usage : filepath threshold");
             System.exit(1);
@@ -37,6 +36,7 @@ public class tropcomp {
                 .map(file -> new Result(file.toString(), tloc.countTloc(file.toString()), tassert.countTassert(file.toString())))
                 .toArray(Result[]::new);
             
+            // Use the results array as needed
             // Arrays utilises pour calculer les top n%
             String[] cleanedStrings = new String[results.length];
 
@@ -69,6 +69,11 @@ public class tropcomp {
             // System.out.println(indexTCMPS);
             // System.out.println(threshold);
 
+            for(int i = 0; i < results.length; i++) {
+                if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
+                    System.out.println(cleanedStrings[i]);
+                }
+            }
             if(toCsv){
                 // Use try-with-resources statement to automatically close the resources
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
@@ -89,22 +94,14 @@ public class tropcomp {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else {
-                for(int i = 0; i < results.length; i++) {
-                    // Si on est dans les top n% pour TLOC et TCMP
-                    if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                        System.out.println(cleanedStrings[i]);
-                    }
-                }
             }
-            
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static String cleanString(String path, int TLOC, int TASSERT) {
+
+public static String cleanString(String path, int TLOC, int TASSERT) {
         // Validate inputs
         if (path == null || path.isEmpty()) {
             throw new IllegalArgumentException("Le filepath ne peut pas etre vide ou null");
@@ -119,10 +116,7 @@ public class tropcomp {
         String[] pathParts = path.split("\\\\");
         String fileName = pathParts[pathParts.length - 1].replace(".java", "");
 
-        // MacOS: String fileName = path.substring(path.lastIndexOf('/') + 1);
-
         // Extraction package
-
         String packageName = "";
         int sourceIndex = path.indexOf("\\src\\test\\java\\");
         if (sourceIndex == -1) {
@@ -136,7 +130,6 @@ public class tropcomp {
         float TCMP = (float) TLOC / TASSERT;
 
         // Combine everything
-        return String.format("%s, %s, %s, %d, %d, %.2f", path, packageName, fileName.substring(0, fileName.length()-5), TLOC, TASSERT, TCMP);
+        return String.format("%s,  %s, %s, %d, %d, %.2f", path, packageName, fileName, TLOC, TASSERT, TCMP);
     }
-
 }
