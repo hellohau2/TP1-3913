@@ -17,10 +17,14 @@ public class tls {
     public static void main(String[] args) {
         if (args.length == 0) {
             computeTls("./", false, null, -1.0f);
+        } else if (args[0].equals("-o")) {
+            if (args.length != 3 || !args[1].endsWith(".csv")) {
+                System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>\nou\ntls <chemin-de-l'entrée>\nou\ntls");
+                System.exit(1);
+            }
+            computeTls(args[2], true, args[1], -1.0f);
         } else if (args.length == 1) {
             computeTls(args[0], false, null, -1.0f);
-        } else if (args[0].equals("-o")) {
-            computeTls(args[2], true, args[1], -1.0f);
         } else {
             System.out.println("Veuillez respecter le format suivant:\ntls -o <chemin-à-la-sortie.csv> <chemin-de-l'entrée>\nou\ntls <chemin-de-l'entrée>\nou\ntls");
             System.exit(1);
@@ -70,13 +74,12 @@ public class tls {
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {                        
                         // Premier ligne
                         writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
-                        writer.newLine();
 
                         // Use the results array as needed
                         for(int i = 0; i < results.length; i++) {
                             if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                                writer.write(cleanedStrings[i]);
                                 writer.newLine();
+                                writer.write(cleanedStrings[i]);
                             }
                         }
                     } catch (IOException e) {
@@ -98,13 +101,12 @@ public class tls {
                         
                         // Premier ligne
                         writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
-                        writer.newLine();
 
                         // Use the results array as needed
                         for(int i = 0; i < results.length; i++) {
                             if(cleanedStrings[i] != null){
-                                writer.write(cleanedStrings[i]);
                                 writer.newLine();
+                                writer.write(cleanedStrings[i]);
                             }
                         }
                     } catch (IOException e) {

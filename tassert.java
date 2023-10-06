@@ -34,8 +34,6 @@ public class tassert {
                         if(!part.trim().isEmpty() && !part.trim().startsWith("//")){
                             Matcher matcher = pattern.matcher(line);
                             while (matcher.find()) {
-                                // TODO: faire si plusieurs Assert sur une meme ligne
-                                // TODO: faire si pattern trouvé dans un commentaire à la fin d'une ligne
                                 count++;
                             }
                             break;
