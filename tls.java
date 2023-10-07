@@ -5,8 +5,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -38,101 +36,95 @@ public class tls {
     }
 
     public static void computeTls(String filepath, Boolean toCsv, String csvName, float threshold){
+        Path startDir = Paths.get(filepath);
 
-        try {
-            Path startDir = Paths.get(filepath);
+        try (Stream<Path> stream = Files.walk(startDir)) {
+            Result[] results = stream
+                    .filter(file -> file.toString().endsWith("Test.java"))
+                    .map(file -> new Result(file.toString(), tloc.countTloc(file.toString()), tassert.countTassert(file.toString())))
+                    .toArray(Result[]::new);
 
-            try (Stream<Path> stream = Files.walk(startDir)) {
-                Result[] results = stream
-                        .filter(file -> file.toString().endsWith("Test.java"))
-                        .map(file -> new Result(file.toString(), tloc.countTloc(file.toString()), tassert.countTassert(file.toString())))
-                        .toArray(Result[]::new);
+            // Arrays utilises pour calculer les top n%
+            String[] cleanedStrings = new String[results.length];
 
-                // Arrays utilises pour calculer les top n%
-                String[] cleanedStrings = new String[results.length];
+            int[] TLOCSfromCleaned = new int[results.length];
+            float[] TCMPfromCleaned = new float[results.length];
 
-                int[] TLOCSfromCleaned = new int[results.length];
-                float[] TCMPfromCleaned = new float[results.length];
+            for(int i = 0; i < results.length; i++) {
+                cleanedStrings[i] = cleanString(results[i].filePath, results[i].tlocResult, results[i].tassertResult);
 
-                for(int i = 0; i < results.length; i++) {
-                    cleanedStrings[i] = cleanString(results[i].filePath, results[i].tlocResult, results[i].tassertResult);
+                TLOCSfromCleaned[i] = results[i].tlocResult;
+                if(results[i].tassertResult != 0) TCMPfromCleaned[i] = (float) results[i].tlocResult / results[i].tassertResult;
+                else TCMPfromCleaned[i] = 0f;
+            }
 
-                    TLOCSfromCleaned[i] = results[i].tlocResult;
-                    if(results[i].tassertResult != 0) TCMPfromCleaned[i] = (float) results[i].tlocResult / results[i].tassertResult;
-                    else TCMPfromCleaned[i] = 0f;
-                }
+            // Threshold de -1.0 signifie qu'on n'utilise pas le threshold
+            if (threshold!=-1.0f){
+                float percentile = 100 - threshold;  // To get the threshold for the top 10%
 
-                // Threshold de -1.0 signifie qu'on n'utilise pas le threshold
-                if (threshold!=-1.0f){
-                    float percentile = 100 - threshold;  // To get the threshold for the top 10%
+                // Sort the array
+                Arrays.sort(TLOCSfromCleaned);
+                Arrays.sort(TCMPfromCleaned);
 
-                    // Sort the array
-                    Arrays.sort(TLOCSfromCleaned);
-                    Arrays.sort(TCMPfromCleaned);
+                // Calculate the index that corresponds to the percentile
+                int indexTLOCS = (int) Math.ceil((percentile / 100) * TLOCSfromCleaned.length) - 1;
+                int indexTCMPS = (int) Math.ceil((percentile / 100) * TCMPfromCleaned.length) - 1;
 
-                    // Calculate the index that corresponds to the percentile
-                    int indexTLOCS = (int) Math.ceil((percentile / 100) * TLOCSfromCleaned.length) - 1;
-                    int indexTCMPS = (int) Math.ceil((percentile / 100) * TCMPfromCleaned.length) - 1;
+                // Get the value at the calculated index
+                float thresholdTLOCS = TLOCSfromCleaned[indexTLOCS];
+                float thresholdTCMPS = TCMPfromCleaned[indexTCMPS];
+                
+                if(toCsv){
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {                        
+                        // Premier ligne
+                        writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
 
-                    // Get the value at the calculated index
-                    float thresholdTLOCS = TLOCSfromCleaned[indexTLOCS];
-                    float thresholdTCMPS = TCMPfromCleaned[indexTCMPS];
-                    
-                    if(toCsv){
-                        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {                        
-                            // Premier ligne
-                            writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
-
-                            // Use the results array as needed
-                            for(int i = 0; i < results.length; i++) {
-                                if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                                    writer.newLine();
-                                    writer.write(cleanedStrings[i]);
-                                }
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else{
+                        // Use the results array as needed
                         for(int i = 0; i < results.length; i++) {
                             if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
-                                System.out.println(cleanedStrings[i]);
+                                writer.newLine();
+                                writer.write(cleanedStrings[i]);
                             }
                         }
-                    }
-
-                } else {
-                    if(toCsv){
-                        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
-                        
-                            
-                            // Premier ligne
-                            writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
-
-                            // Use the results array as needed
-                            for(int i = 0; i < results.length; i++) {
-                                if(cleanedStrings[i] != null){
-                                    writer.newLine();
-                                    writer.write(cleanedStrings[i]);
-                                }
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }else{
-                        for(int i = 0; i < results.length; i++) {
-                            System.out.println(cleanedStrings[i]);
-                    }
-
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                else{
+                    for(int i = 0; i < results.length; i++) {
+                        if(results[i].tassertResult != 0 && results[i].tlocResult >= thresholdTLOCS && (float)results[i].tlocResult/results[i].tassertResult >= thresholdTCMPS){
+                            System.out.println(cleanedStrings[i]);
+                        }
+                    }
+                }
+
+            } else {
+                if(toCsv){
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvName))) {
+                    
+                        
+                        // Premier ligne
+                        writer.write("Chemin, Paquet, Classe, TLOC, TASSERT, tcmp");
+
+                        // Use the results array as needed
+                        for(int i = 0; i < results.length; i++) {
+                            if(cleanedStrings[i] != null){
+                                writer.newLine();
+                                writer.write(cleanedStrings[i]);
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    for(int i = 0; i < results.length; i++) {
+                        System.out.println(cleanedStrings[i]);
+                }
+
+                }
             }
-        } catch (Exception e) {
-            System.out.println("Invalid path");
-            System.exit(1);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
